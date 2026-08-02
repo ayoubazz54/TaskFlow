@@ -1,34 +1,52 @@
+const pool = require("../database/db");
 
-function addTask(tasks, title) {
-    const task = {
-        id: Date.now(),
-        title: title,
-        completed: false
-    };
-    tasks.push(task);
-    return task;
+async function getAllTasks() {
+    const result = await pool.query(
+        "SELECT * FROM tasks"
+    );
+    return result.rows;
 }
 
-function deleteTask(tasks, ID) {
-    const id = Number(ID);
-    const index = tasks.findIndex(task => task.id === id);
-    if (index === -1){
-        return false;
-    }
-    tasks.splice(index, 1);
-    return true;
+async function addTask(title) {
+    const result = await pool.query(
+        `
+        INSERT INTO tasks (title)
+        VALUES ($1)
+        RETURNING *
+        `,
+        [title]
+    );
+    return result.rows[0];
 }
 
-function changeTask(tasks, ID, bool) {
-    const id = Number(ID);
-    const task = tasks.find(task => task.id === id);
-    if (task) {
-        task.completed = bool;
-    }
-    return task;
+async function deleteTask(ID) {
+    const result = await pool.query(
+        `
+        DELETE FROM tasks
+        WHERE id = $1
+        RETURNING *
+        `,
+        [Number(ID)]
+    );
+    return result.rows.length > 0;
+
+}
+
+async function changeTask(ID, completed) {
+    const result = await pool.query(
+        `
+        UPDATE tasks
+        SET completed = $1
+        WHERE id = $2
+        RETURNING *
+        `,
+        [completed, Number(ID)]
+    );
+    return result.rows[0];
 }
 
 module.exports = {
+    getAllTasks,
     addTask,
     deleteTask,
     changeTask
