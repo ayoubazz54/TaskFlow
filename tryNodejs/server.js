@@ -1,58 +1,23 @@
 const express = require("express");
 const cors = require("cors");
+const tasksRoutes = require("./routes/tasksRoutes");
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(tasksRoutes);
 
-let tasks = [
-        {
-            id: 1,
-            title: "Apprendre C",
-            completed: true
-        },
-        {
-            id: 2,
-            title: "Apprendre SQL",
-            completed: false
-        }
-    ];
 
-app.get("/", (req, res) => {
-    res.send("Accueil")
+app.listen(3000, () => {
+    console.log("Serveur lancé.");
 });
 
-app.get("/tasks", (req, res) => {
-    res.json(tasks);
-});
 
-app.post("/tasks", (req, res) => {
-    const newTask = {
-        id: Date.now(),
-        title: req.body.title,
-        completed: false
-    };
-    tasks.push(newTask);
-    res.json(newTask);
-});
 
-app.delete("/tasks/:id", (req,res)=>{
-    const id = Number(req.params.id);
-    tasks = tasks.filter(task => task.id !== id);
 
-    res.json({
-        message:"Tâche supprimée"
-    });
-});
 
-app.put("/tasks/:id", (req, res) => {
-    const id = Number(req.params.id);
-    const task = tasks.find(task => task.id === id);
-    task.completed = req.body.completed;
 
-    res.json(task);
-
-});
 
 /*
 app.get("/about", (req, res) => {
@@ -75,7 +40,3 @@ app.get('/users', (req, res) => {
         "name": "Alice"
     }]);
 }) */
-
-app.listen(3000, () => {
-    console.log("Serveur lancé.");
-});
