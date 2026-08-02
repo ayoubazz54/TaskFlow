@@ -1,4 +1,3 @@
-const tasks = require("../data/tasks");
 
 function addTask(tasks, title) {
     const task = {
@@ -13,9 +12,11 @@ function addTask(tasks, title) {
 function deleteTask(tasks, ID) {
     const id = Number(ID);
     const index = tasks.findIndex(task => task.id === id);
-    if (index !== -1){
-        tasks.splice(index, -1);
+    if (index === -1){
+        return false;
     }
+    tasks.splice(index, 1);
+    return true;
 }
 
 function changeTask(tasks, ID, bool) {

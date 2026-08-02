@@ -6,18 +6,36 @@ function getTasks(req, res) {
     res.json(tasks);
 }
 
-function postTasks(req, res) {
-    let task = addTask(tasks, req.body.title);
-    res.status(201).json(task);
+function postTasks(req, res, next) {
+    try {
+        const { title } = req.body;
+        if (typeof title !== "string" || title.trim() === "") {
+            return res.status(400).json({message: "Le titre est obligatoire."});
+        }
+        const task = addTask(tasks, title);
+        res.status(201).json(task);
+    }
+    catch(error) {
+        next(error)
+    };
 }
 
 function deleteTasks(req,res) {
-    deleteTask(tasks, req.params.id);
+    const deleted = deleteTask(tasks, req.params.id);
+    if (!deleted) {
+        return res.status(404).json({message: "Tache introuvable."});
+    }
     res.sendStatus(204);
 }
 
 function putTasks(req, res) {
-    let task = changeTask(tasks, req.params.id, req.body.completed);
+    if (typeof req.body.completed !== "boolean") {
+        return res.status(400).json({message: "completed doit être un booléen."});
+    }
+    const task = changeTask(tasks, req.params.id, req.body.completed);
+    if (task === undefined) {
+        return res.status(404).json({message: "Tache introuvable."});
+    }
     res.json(task);
 
 }
