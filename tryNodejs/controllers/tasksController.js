@@ -1,4 +1,4 @@
-const {getAllTasks, addTask, deleteTask, changeTask} = require("../services/tasksService");
+const {getAllTasks, addTask, deleteTask, changeTask, deleteAllTask} = require("../services/tasksService");
 
 
 async function getTasks(req, res, next) {
@@ -25,7 +25,7 @@ async function postTasks(req, res, next) {
     };
 }
 
-async function deleteTasks(req,res) {
+async function deleteTasks(req, res, next) {
     try {
         const deleted = await deleteTask(req.params.id);
         if (!deleted) {
@@ -38,7 +38,7 @@ async function deleteTasks(req,res) {
     };
 }
 
-async function putTasks(req, res) {
+async function putTasks(req, res, next) {
     try{
         if (typeof req.body.completed !== "boolean") {
             return res.status(400).json({message: "completed doit être un booléen."});
@@ -54,11 +54,24 @@ async function putTasks(req, res) {
     };
 }
 
+async function deleteAllTasks(req, res, next) {
+    try{
+        const deleted = await deleteAllTask();
+        if (!deleted) {
+            return res.status(204).json({message: "Pas de tâches."});
+        }
+        res.sendStatus(204);
+    }
+    catch(error) {
+        next(error);
+    };
+}
 
 module.exports = {
     getTasks,
     postTasks,
     deleteTasks,
-    putTasks
+    putTasks,
+    deleteAllTasks
 };
 

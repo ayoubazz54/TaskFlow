@@ -1,8 +1,12 @@
+const { deleteAllTasks } = require("../controllers/tasksController");
 const pool = require("../database/db");
 
 async function getAllTasks() {
     const result = await pool.query(
-        "SELECT * FROM tasks"
+        `
+        SELECT * FROM tasks
+        ORDER BY id ASC
+        `
     );
     return result.rows;
 }
@@ -45,9 +49,20 @@ async function changeTask(ID, completed) {
     return result.rows[0];
 }
 
+async function deleteAllTask() {
+    const result = await pool.query(
+        `
+        DELETE FROM tasks
+        RETURNING *
+        `
+    );
+    return result.rows.length > 0;
+}
+
 module.exports = {
     getAllTasks,
     addTask,
     deleteTask,
-    changeTask
+    changeTask,
+    deleteAllTask
 };

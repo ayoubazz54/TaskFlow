@@ -14,7 +14,12 @@ function App() {
     if(filter === "all") {
       return true;
     }
-    return task.completed === (filter === "done");
+    if(filter === "todo") {
+      return !task.completed;
+    }
+    if(filter === "done") {
+      return task.completed;
+    }
   });
 
   useEffect(() => {
@@ -76,8 +81,14 @@ function App() {
 
   }
 
-  function vider() {
-    setTasks([]);
+  async function vider() {
+    await fetch(
+      "http://localhost:3000/tasks",
+      {
+        method: "DELETE"
+      }
+    );
+    chargerTasks();
   }
 
   function handleKeyDown(event) {
