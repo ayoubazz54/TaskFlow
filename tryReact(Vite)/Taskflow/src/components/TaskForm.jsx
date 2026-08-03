@@ -1,7 +1,8 @@
-function TaskForm({newTask, setNewTask, handleAjouter, handleKeyDown, handleVider}) {
+function TaskForm({loading, newTask, setNewTask, handleAjouter, handleKeyDown, handleVider}) {
     return (
     <>
         <input 
+            disabled={loading}
             type="text"
             value={newTask}
             onChange={(event) => setNewTask(event.target.value)}
@@ -9,9 +10,9 @@ function TaskForm({newTask, setNewTask, handleAjouter, handleKeyDown, handleVide
             onKeyDown={handleKeyDown}
         />
 
-        <button onClick={handleAjouter}>Ajouter</button>
+        <button onClick={handleAjouter} disabled={loading}>Ajouter</button>
 
-        <button onClick={handleVider}>Vider la liste</button>
+        <button onClick={handleVider} disabled={loading}>Vider la liste</button>
     </>
     );
 }

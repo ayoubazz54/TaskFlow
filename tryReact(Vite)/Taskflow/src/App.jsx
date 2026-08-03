@@ -14,6 +14,8 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
   const [filter, setFilter] = useState("all");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const filteredTasks = tasks.filter(task => {
     if(filter === "all") {
@@ -30,37 +32,81 @@ function App() {
 
 
   async function load() {
-    const data = await chargerTasks();
-    setTasks(data);
+    try {
+      setLoading(true);
+      const data = await chargerTasks();
+      setTasks(data);
+      setError("");
+    }
+    catch(error) {
+      setError("Impossible de connecter au serveur.");
+    }
+    finally {
+      setLoading(false);
+    }
   }
 
   async function handleAjouter() {
     if(newTask.trim()==="")
-        return;
-    const task = await ajouterTache(newTask);
-    setTasks(prev => [
-        ...prev,
-        task
-    ]);
-    setNewTask("");
+      return;
+    try {
+      setLoading(true);
+      const task = await ajouterTache(newTask);
+      setTasks(prev => [
+          ...prev,
+          task
+      ]);
+      setNewTask("");
+      setError("");
+    }
+    catch(error) {
+      setError("Impossible d'ajouter la tâche.");
+    }
+    finally{
+      setLoading(false);
+    }
   }
 
   async function handleSupprimer(id) {
-    await supprimer(id);
-    const data = await chargerTasks();
-    setTasks(data);
+    try {
+      setLoading(true);
+      await supprimer(id);
+      await load();
+    }
+    catch(error) {
+      setError("Impossible de supprimer la tâche.");
+    }
+    finally{
+      setLoading(false);
+    }
   }
 
   async function handleToggle(task) {
-    await toggleTask(task);
-    const data = await chargerTasks();
-    setTasks(data);
+    try {
+      setLoading(true);
+      await toggleTask(task);
+      await load();
+    }
+    catch(error) {
+      setError("Impossible de modifier la tâche.");
+    }
+    finally{
+      setLoading(false);
+    }
   }
 
   async function handleVider() {
-    await vider();
-    const data = await chargerTasks();
-    setTasks(data);
+    try {
+      setLoading(true);
+      await vider();
+      await load();
+    }
+    catch(error) {
+      setError("Impossible de vider la liste.");
+    }
+    finally{
+      setLoading(false);
+    }
   }
 
   function handleKeyDown(event) {
@@ -101,7 +147,14 @@ function App() {
     <div>
       <Navbar />
 
+      {loading && <p>Chargement...</p>}
+
+      {error &&(
+        <p style={{color:"red"}}>{error}</p>
+      )}
+
       <TaskForm 
+        loading={loading}
         newTask={newTask}
         setNewTask={setNewTask}
         handleAjouter={handleAjouter}
