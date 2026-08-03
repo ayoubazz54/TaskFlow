@@ -3,6 +3,11 @@ import TaskList from "./components/TaskList";
 import Navbar from "./components/Navbar";
 import "./styles/App.css";
 import {chargerTasks, ajouterTache, vider, supprimer, toggleTask} from "./api/tasksApi";
+import TaskCounter from "./components/TaskCounter";
+import TaskFilters from "./components/TaskFilters";
+import TaskForm from "./components/TaskForm";
+
+
 
 function App() {
 
@@ -96,31 +101,21 @@ function App() {
     <div>
       <Navbar />
 
-      <input 
-        type="text"
-        value={newTask}
-        onChange={(event) => setNewTask(event.target.value)}
-        placeholder="Nouvelle tâche"
-        onKeyDown={handleKeyDown}
+      <TaskForm 
+        newTask={newTask}
+        setNewTask={setNewTask}
+        handleAjouter={handleAjouter}
+        handleKeyDown={handleKeyDown}
+        handleVider={handleVider}
       />
 
-      <button onClick={handleAjouter}>Ajouter</button>
+      <TaskFilters
+        setFilter={setFilter}
+      />
 
-      <button onClick={handleVider}>Vider la liste</button>
-
-      <button onClick={() => setFilter("all")}>
-          Toutes
-      </button>
-
-      <button onClick={() => setFilter("todo")}>
-          À faire
-      </button>
-
-      <button onClick={() => setFilter("done")}>
-          Terminées
-      </button>
-
-      <p>Nombre des tâches : {tasks.length}</p>
+      <TaskCounter
+        count={tasks.length}
+      />
 
       <TaskList 
         tasks={filteredTasks}
