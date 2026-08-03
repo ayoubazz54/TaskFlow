@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import TaskList from "./components/TaskList";
 import Navbar from "./components/Navbar";
 import "./styles/App.css";
-
+import {chargerTasks, ajouterTache, vider, supprimer, toggleTask} from "./api/tasksApi";
 
 function App() {
 
@@ -22,19 +22,55 @@ function App() {
     }
   });
 
+
+
+  async function load() {
+    const data = await chargerTasks();
+    setTasks(data);
+  }
+
+  async function handleAjouter() {
+    if(newTask.trim()==="")
+        return;
+    const task = await ajouterTache(newTask);
+    setTasks(prev => [
+        ...prev,
+        task
+    ]);
+    setNewTask("");
+  }
+
+  async function handleSupprimer(id) {
+    await supprimer(id);
+    const data = await chargerTasks();
+    setTasks(data);
+  }
+
+  async function handleToggle(task) {
+    await toggleTask(task);
+    const data = await chargerTasks();
+    setTasks(data);
+  }
+
+  async function handleVider() {
+    await vider();
+    const data = await chargerTasks();
+    setTasks(data);
+  }
+
+  function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      handleAjouter();
+    }
+  }
+
   useEffect(() => {
     console.log('Le composant App est créé !');
   }, []);
 
-  async function chargerTasks() {
-    const res = await fetch("http://localhost:3000/tasks");
-    const data = await res.json();
-    setTasks(data);
-  }
-
   // Remplir tasks depuis le backend:
   useEffect(() => {
-      chargerTasks();
+      load();
   }, []);
 
 
@@ -54,77 +90,6 @@ function App() {
         "TaskFlow (" + tasks.length + ")";
   }, [tasks]);
 
-  async function ajouterTache() {
-    
-    if(newTask.trim() === "")
-      return;
-
-    const res = await fetch(
-      "http://localhost:3000/tasks",
-      {
-        method:"POST",
-        headers:{
-            "content-type":"application/json"
-        },
-        body: JSON.stringify( { title: newTask } )
-      }
-    );
-
-    const task = await res.json();
-
-    setTasks(prevTasks => [
-      ...prevTasks,
-      task
-    ]);
-
-    setNewTask("");
-
-  }
-
-  async function vider() {
-    await fetch(
-      "http://localhost:3000/tasks",
-      {
-        method: "DELETE"
-      }
-    );
-    chargerTasks();
-  }
-
-  function handleKeyDown(event) {
-    if (event.key === "Enter") {
-      ajouterTache();
-    }
-  }
-
-  async function supprimer(id) {
-
-    await fetch(
-      "http://localhost:3000/tasks/" + id,
-      {
-        method: "DELETE"
-      }
-    );
-
-    chargerTasks();
-  }
-
-  async function toggleTask(task) {
-
-    await fetch(
-      "http://localhost:3000/tasks/" + task.id,
-      {
-        method:"PUT",
-        headers:{
-            "content-type":"application/json"
-        },
-        body: JSON.stringify( { completed: !task.completed } )
-      }
-    );
-
-    chargerTasks();
-
-  }
 
   console.log(filteredTasks);
   return (
@@ -139,9 +104,9 @@ function App() {
         onKeyDown={handleKeyDown}
       />
 
-      <button onClick={ajouterTache}>Ajouter</button>
+      <button onClick={handleAjouter}>Ajouter</button>
 
-      <button onClick={vider}>Vider la liste</button>
+      <button onClick={handleVider}>Vider la liste</button>
 
       <button onClick={() => setFilter("all")}>
           Toutes
@@ -159,8 +124,8 @@ function App() {
 
       <TaskList 
         tasks={filteredTasks}
-        supprimer={supprimer}
-        toggleTask={toggleTask}
+        supprimer={handleSupprimer}
+        toggleTask={handleToggle}
       />
     </div>
   );

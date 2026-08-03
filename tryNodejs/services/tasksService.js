@@ -1,4 +1,3 @@
-const { deleteAllTasks } = require("../controllers/tasksController");
 const pool = require("../database/db");
 
 async function getAllTasks() {
