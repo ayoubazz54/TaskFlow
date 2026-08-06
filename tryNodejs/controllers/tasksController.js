@@ -3,7 +3,7 @@ const {getAllTasks, addTask, deleteTask, changeTask, deleteAllTask} = require(".
 
 async function getTasks(req, res, next) {
     try {
-        const tasks = await getAllTasks();
+        const tasks = await getAllTasks(req.user.id);
         res.json(tasks);
     }
     catch(error) {
@@ -17,7 +17,7 @@ async function postTasks(req, res, next) {
         if (typeof title !== "string" || title.trim() === "") {
             return res.status(400).json({message: "Le titre est obligatoire."});
         }
-        const task = await addTask(title);
+        const task = await addTask(title, req.user.id);
         res.status(201).json(task);
     }
     catch(error) {
@@ -27,7 +27,7 @@ async function postTasks(req, res, next) {
 
 async function deleteTasks(req, res, next) {
     try {
-        const deleted = await deleteTask(req.params.id);
+        const deleted = await deleteTask(req.params.id, req.user.id);
         if (!deleted) {
             return res.status(404).json({message: "Tache introuvable."});
         }
@@ -43,7 +43,7 @@ async function putTasks(req, res, next) {
         if (typeof req.body.completed !== "boolean") {
             return res.status(400).json({message: "completed doit être un booléen."});
         }
-        const task = await changeTask(req.params.id, req.body.completed);
+        const task = await changeTask(req.params.id, req.body.completed, req.user.id);
         if (!task) {
             return res.status(404).json({message: "Tache introuvable."});
         }
@@ -56,7 +56,7 @@ async function putTasks(req, res, next) {
 
 async function deleteAllTasks(req, res, next) {
     try{
-        const deleted = await deleteAllTask();
+        const deleted = await deleteAllTask(req.user.id);
         if (!deleted) {
             return res.status(204).json({message: "Pas de tâches."});
         }
