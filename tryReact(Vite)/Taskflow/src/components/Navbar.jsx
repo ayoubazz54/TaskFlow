@@ -1,9 +1,4 @@
-function Navbar() {
-
-    function logout() {
-        localStorage.removeItem("token");
-        window.location.reload;
-    }
+function Navbar({logout}) {
 
     return (
         <nav>

@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { register } from "../api/authApi";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
     
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-
+    const navigate = useNavigate();
 
     async function handleRegister() {
         try {
             await register(email, password);
             alert("Compte créé.");
+            navigate("/home");
             setError("");
         }
         catch(error) {
@@ -21,6 +24,11 @@ function Register() {
 
     return (
         <div>
+
+            {error &&(
+                <p style={{color:"red"}}>{error}</p>
+            )}
+
             <p>Inscription</p>
 
             <input 

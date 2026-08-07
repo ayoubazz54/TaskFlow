@@ -6,7 +6,7 @@ import {chargerTasks, ajouterTache, vider, supprimer, toggleTask} from "../api/t
 import TaskCounter from "../components/TaskCounter";
 import TaskFilters from "../components/TaskFilters";
 import TaskForm from "../components/TaskForm";
-
+import { useNavigate } from "react-router-dom";
 
 
 function Home() {
@@ -16,6 +16,7 @@ function Home() {
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const filteredTasks = tasks.filter(task => {
     if(filter === "all") {
@@ -115,8 +116,13 @@ function Home() {
     }
   }
 
+  function logout() {
+      localStorage.removeItem("token");
+      navigate("/login");
+  }
+
   useEffect(() => {
-    console.log('Le composant App est créé !');
+    console.log('Le composant Home est créé !');
   }, []);
 
   // Remplir tasks depuis le backend:
@@ -145,7 +151,7 @@ function Home() {
   console.log(filteredTasks);
   return (
     <div>
-      <Navbar />
+      <Navbar logout={logout}/>
 
       {loading && <p>Chargement...</p>}
 

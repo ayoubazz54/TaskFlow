@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { login } from "../api/authApi";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function Login({ onLogin }) {
+function Login() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-
+    const navigate = useNavigate();
 
     async function handleLogin() {
         try {
             const res = await login(email, password);
             localStorage.setItem("token", res.token);
-            onLogin();
+            navigate("/home");
             setError("");
         }
         catch(error) {
@@ -23,6 +24,11 @@ function Login({ onLogin }) {
 
     return (
         <div>
+
+            {error &&(
+                <p style={{color:"red"}}>{error}</p>
+            )}
+
             <p>Connexion</p>
 
             <input 
