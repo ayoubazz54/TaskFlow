@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { login } from "../api/authApi";
+import { login as loginApi } from "../api/authApi";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
 
 function Login() {
 
@@ -10,10 +12,12 @@ function Login() {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    const { login } = useAuth();
+
     async function handleLogin() {
         try {
-            const res = await login(email, password);
-            localStorage.setItem("token", res.token);
+            const res = await loginApi(email, password);
+            login();
             navigate("/home");
             setError("");
         }

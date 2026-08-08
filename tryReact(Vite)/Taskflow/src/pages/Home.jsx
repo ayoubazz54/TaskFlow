@@ -116,10 +116,6 @@ function Home() {
     }
   }
 
-  function logout() {
-      localStorage.removeItem("token");
-      navigate("/login");
-  }
 
   useEffect(() => {
     console.log('Le composant Home est créé !');
@@ -151,7 +147,7 @@ function Home() {
   console.log(filteredTasks);
   return (
     <div>
-      <Navbar logout={logout}/>
+      <Navbar />
 
       {loading && <p>Chargement...</p>}
 

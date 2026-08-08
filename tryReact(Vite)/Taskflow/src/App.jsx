@@ -5,10 +5,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
 
   return (
+    <AuthProvider>
 
       <BrowserRouter>
 
@@ -29,6 +31,8 @@ function App() {
         </Routes>
 
       </BrowserRouter>
+    
+    </AuthProvider>
   );
 }
 
