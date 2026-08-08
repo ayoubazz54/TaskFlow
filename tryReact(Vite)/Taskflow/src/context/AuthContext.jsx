@@ -1,10 +1,31 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import { getMe } from "../api/usersApi";
+
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     
     const [token, setToken] = useState(localStorage.getItem("token"));
+    const [user, setUser] = useState(null);
+
+    async function loadUser() {
+        if (!token) {
+            setUser(null);
+            return;  
+        }
+        try {
+            const data = await getMe();
+            setUser(data);
+        }
+        catch(error) {
+            logout();
+        }
+    }
+
+    useEffect(() => {
+        loadUser();
+    }, [token]);
 
     function login(newToken) {
         localStorage.setItem("token", newToken);
@@ -21,7 +42,7 @@ export function AuthProvider({ children }) {
     return (
         <AuthContext.Provider
             value={
-                {token, login, logout, isAuthenticated}
+                {token, user, login, logout, isAuthenticated}
             }
         >
             {children}
