@@ -17,11 +17,12 @@ function Login() {
     async function handleLogin() {
         try {
             const res = await loginApi(email, password);
-            login();
+            login(res.token);
             navigate("/home");
             setError("");
         }
         catch(error) {
+            console.error("ERREUR LOGIN :", error);
             setError("Impossible de se connecter.");
         }
     }

@@ -8,12 +8,12 @@ export function AuthProvider({ children }) {
 
     function login(newToken) {
         localStorage.setItem("token", newToken);
-        setItem(newToken);
+        setToken(newToken);
     }
 
     function logout() {
         localStorage.removeItem("token");
-        setItem(null);
+        setToken(null);
     }
 
     const isAuthenticated = token !== null;
