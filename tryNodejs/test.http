@@ -1,6 +1,2 @@
-POST http://localhost:3000/tasks
-Content-Type: application/json
-
-{
-    "title":"Faire un backend"
-}
+GET http://localhost:3000/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoiYXlvdWJlbGF6ekBnbWFpbC5jb20iLCJpYXQiOjE3ODYyMDYxODUsImV4cCI6MTc4NjIwOTc4NX0.cS9F2Dw0U0IXPRF0bevCrpO_edygIo-tG-7zXAEhWQE
