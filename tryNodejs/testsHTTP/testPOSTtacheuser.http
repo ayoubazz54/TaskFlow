@@ -1,7 +1,0 @@
-POST http://localhost:3000/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJwZWRyb3NzYW5AZ21haWwuY29tIiwiaWF0IjoxNzg1OTI5NDE4LCJleHAiOjE3ODU5MzMwMTh9.ztFTz9C84gG1smrZSvnbYiNz1N5XnvJix1hJ0v-d474
-Content-Type: application/json
-
-{
-    "title":"ALLER MANGER!"
-}

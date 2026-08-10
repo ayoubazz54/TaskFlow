@@ -1,4 +1,0 @@
-GET http://localhost:3000/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJheW91YkBnbWFpbC5jb20iLCJpYXQiOjE3ODYwMDc1MDEsImV4cCI6MTc4NjAxMTEwMX0.ZmPJXA0Cy0lQAzFJKELy39e5Ifc1ZXjuKDQqyUsTlQc
-
-
