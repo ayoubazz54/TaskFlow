@@ -1,0 +1,6 @@
+PUT http://localhost:3000/tasks/2
+Content-Type: application/json
+
+{
+    "completed": true
+}

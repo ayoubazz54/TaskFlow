@@ -1,0 +1,43 @@
+services: 
+
+  postgres:
+    image: postgres:16
+    container_name: taskflow-db
+    environment:
+      POSTGRES_USER: taskflow
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: taskflow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - taskflow-network
+
+  backend:
+    build: ./backend
+    container_name: taskflow-backend
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: taskflow
+      DB_PASSWORD: 1234
+      DB_NAME: taskflow
+    depends_on:
+      - postgres
+    networks:
+      - taskflow-network
+
+  frontend:
+    build: ./frontend
+    container_name: taskflow-frontend
+    ports: 
+      - "80:80"
+    depends_on:
+      - postgres
+    networks:
+      - taskflow-network
+
+networks:
+  taskflow-network: 
+
+volumes:
+  postgres_data:
