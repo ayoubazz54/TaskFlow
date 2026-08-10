@@ -21,6 +21,7 @@ services:
       DB_USER: taskflow
       DB_PASSWORD: 1234
       DB_NAME: taskflow
+      JWT_SECRET: mon_secret_super_long_et_complexe
     depends_on:
       - postgres
     networks:
