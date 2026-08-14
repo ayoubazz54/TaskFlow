@@ -13,7 +13,6 @@ services:
       - taskflow-network
 
   backend:
-    build: ./backend
     image: ayoubazz54/taskflow-backend:latest
     container_name: taskflow-backend
     environment:
@@ -29,7 +28,6 @@ services:
       - taskflow-network
 
   frontend:
-    build: ./frontend
     image: ayoubazz54/taskflow-frontend:latest
     container_name: taskflow-frontend
     ports: 
