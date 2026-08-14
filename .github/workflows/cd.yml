@@ -1,7 +1,7 @@
 name: TaskFlow CD
 
 on:
-  workflows_run:
+  workflow_run:
     workflows: ["TaskFlow CI"]
     types: 
       - completed
@@ -19,19 +19,20 @@ jobs:
     steps:
       - name: Séployer sur le serveur
         uses: appleboy/ssh-action@v1.2.2
+        
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
 
-    script: |
+          script: |
 
-      cd ~/TaskFlow
+            cd ~/TaskFlow
 
-      docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml pull
 
-      docker compose -f docker-compose.prod.yml up -d postgres
+            docker compose -f docker-compose.prod.yml up -d postgres
 
-      docker compose -f docker-compose.prod.yml run --rm backendn npm run migrate
+            docker compose -f docker-compose.prod.yml run --rm backend npm run migrate
 
-      docker compose -f docker-compose.prod.yml up -d frontend
+            docker compose -f docker-compose.prod.yml up -d backend frontend
