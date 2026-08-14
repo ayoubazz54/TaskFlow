@@ -25,9 +25,11 @@ jobs:
           cache-dependency-path: backend/package-lock.json
 
       - name: Installer les dépendances du backend
+        working-directory: backend
         run: npm ci
 
       - name: Lancer les tests du backend
+        working-directory: backend
         run: npm test -- --passWithNoTests
 
       - name: Connexion à Docker Hub
