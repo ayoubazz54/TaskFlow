@@ -38,14 +38,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Construire l'image backend
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-backend:latest ./backend
+      - name: Construire les services
+        run: docker compose -f docker-compose.yml build
 
-      - name: Construire l'image frontend
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-frontend:latest ./frontend
+      - name: Démarrer les services
+        run: docker compose -f docker-compose.yml up -d
 
-      - name: Publier l'image backend
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-backend:latest
+      - name: Vérifier les containers 
+        run: docker compose -f docker-compose.yml ps
 
-      - name: Publier l'image frontend
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-frontend:latest
+      - name: Publier les images
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-backend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-frontend:latest
