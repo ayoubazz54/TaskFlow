@@ -10,12 +10,8 @@ on:
       - main
 
 jobs:
-  backend:
+  build-and-push:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: backend
 
     steps:
       - name: Récupérer le code
@@ -28,10 +24,10 @@ jobs:
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
-      - name: Installer les dépendances
+      - name: Installer les dépendances du backend
         run: npm ci
 
-      - name: Lancer les tests
+      - name: Lancer les tests du backend
         run: npm test -- --passWithNoTests
 
       - name: Connexion à Docker Hub
@@ -40,8 +36,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Construire l'image Docker
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-backend:latest .
+      - name: Construire l'image backend
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-backend:latest ./backend
 
-      - name: Publier l'image
+      - name: Construire l'image frontend
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-frontend:latest ./frontend
+
+      - name: Publier l'image backend
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-backend:latest
+
+      - name: Publier l'image frontend
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/taskflow-frontend:latest
